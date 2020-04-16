@@ -1,2 +1,10 @@
-# inotify_realtime
-inotify_realtime_file
+#inotify_test 
+## env
+ubuntu 16.04.06 LTS
+
+## ETC.
+- 몹시 불편하게도 디렉토리에 대한 리커시브한 기능이 없음 ..
+- 이떻게 해야할까 ...
+- 파일 탐지 쓰레드가 돌아야 하는것인가 ...?
+
+
