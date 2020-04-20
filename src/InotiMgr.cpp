@@ -4,11 +4,11 @@
 
 #include "InotiMgr.h"
 #include "EpollWrapper.h"
+#include "boost/filesystem.hpp"
 
 #include <unistd.h>
 #include <sys/inotify.h>
 
-#include <string>
 #include <iostream>
 #include <thread>
 
@@ -27,35 +27,36 @@ bool InotiMgr::Init() {
   if (inoti_fd < 0) {
     return false;
   }
+  if (!EpollWrapper::EpollCreate(1, true, epoll_fd)) {
+    printf("epoll Create Failed\n");
+    return false;
+  }
 
   std::string target_path = "/home/realbro/test";
-  watch_fd = inotify_add_watch(inoti_fd, target_path.c_str(), IN_MODIFY | IN_CREATE | IN_DELETE);
-  if (watch_fd < 0) {
-    std::cout << "inoti add error";
+  AddItem(target_path,inoti_fd, watch_fd);
+
+  std::thread epoll_tracking(&InotiMgr::EpollHandler, this);
+  epoll_tracking.detach();
+}
+
+bool InotiMgr::AddItem(std::string &target_path, int &i_fd, int &w_fd) {
+  w_fd = inotify_add_watch(i_fd, target_path.c_str(), IN_MODIFY | IN_CREATE | IN_DELETE);
+  if (w_fd < 0) {
+    printf("add fail.\n");
     return false;
   }
-
-  std::string target_path2 = "/home/realbro/test2";
-  watch_fd = inotify_add_watch(inoti_fd, target_path2.c_str(), IN_MODIFY | IN_CREATE | IN_DELETE);
-  if (watch_fd < 0) {
-    std::cout << "inoti add error";
-    return false;
-  }
-
-  if (!EpollWrapper::EpollCreate(1, true, epoll_fd)) {
-    std::cout << "epoll Create Failed" << std::endl;
-    return false;
-  }
-
   if (!EpollWrapper::EpollControll(epoll_fd,
                                    inoti_fd,
                                    EPOLLIN | EPOLLOUT | EPOLLERR | EPOLLET,
                                    EPOLL_CTL_ADD)) {
-    std::cout << "epoll add failed" << std::endl;
+    printf("epoll add failed.\n");
     return false;
   }
-  std::thread epoll_tracking(&InotiMgr::EpollHandler, this);
-  epoll_tracking.detach();
+  return true;
+}
+bool InotiMgr::RemoveItem(){
+  // not available.
+  // TODO : inotify 는 path를 특정해서 등록을 뺄 수 없다 . 각기 다른 fd로 처리하면 사용 가능할텐데 fd 가 너무 많아서 고민중 ...
 }
 
 void InotiMgr::MaskCheck(const struct inotify_event *event) {

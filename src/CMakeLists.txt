@@ -4,20 +4,26 @@ set(MODULE_NAME testtest)
 project(MODULE_NAME)
 set(CMAKE_CXX_STANDARD 14)
 
+set(INCLUDE_PATH ${CMAKE_SOURCE_DIR}/include)
+set(LIB_PATH ${CMAKE_SOURCE_DIR}/libs)
 set(BIN_PATH ${CMAKE_CURRENT_BINARY_DIR}/output_bin)
 set(SOURCES
         main.cpp
         InotiMgr.cpp
         EpollWrapper.cpp
         FileDescriptorTool.cpp
-        StringTool.cpp)
+        StringTool.cpp DirectoryMgr.cpp DirectoryMgr.h)
+
+include_directories(${INCLUDE_PATH})
 
 add_executable(${MODULE_NAME} ${SOURCES})
 
 find_package(Threads REQUIRED)
 
 target_link_libraries(${MODULE_NAME}
-        ${CMAKE_THREAD_LIBS_INIT})
+        ${CMAKE_THREAD_LIBS_INIT}
+        ${LIB_PATH}/boost/libboost_filesystem.a
+        ${LIB_PATH}/boost/libboost_system.a)
 
 set_property(TARGET ${MODULE_NAME} PROPERTY OUTPUT_NAME ${MODULE_NAME})
 
