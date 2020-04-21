@@ -10,9 +10,7 @@
 int main(int argc, char *argv[]) {
   printf("testtest\n");
 
-  InotiMgr inoti_mgr;
-  inoti_mgr.Init();
-
+  InotiMgr::GetInstance().Init();
   while (1) {
     printf ("sleep\n");
     sleep(1);

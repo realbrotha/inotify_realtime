@@ -7,15 +7,26 @@
 
 #include "InotiMgr.h"
 
+#include <ftw.h>
+#include <string>
+#include <thread>
+#include <vector>
+
 class DirectoryMgr {
  public:
-  DirectoryMgr(InotiMgr inoti_mgr);
+  DirectoryMgr();
   ~DirectoryMgr();
 
   bool Init();
  private:
   bool Finalize();
-  InotiMgr* inoti_mgr_;
+  bool TestFunc();
+  void SearchDirectory();
+  static bool IsSkipPath(std::string& target_path);
+  static int FtwCallback(const char *fpath, const struct stat *sb, int typeflag, struct FTW *ftwbuf);
+
+  std::thread search_thread;
+  static std::vector<std::string> sample_list;
 };
 
 #endif //TEST_SRC_DIRECTORYMGR_H_

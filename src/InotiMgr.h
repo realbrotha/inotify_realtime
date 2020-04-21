@@ -11,12 +11,17 @@
 #include <string>
 class InotiMgr {
  public :
+  static InotiMgr& GetInstance();
+
+
+  bool Init();
+
+ private:
   InotiMgr();
   ~InotiMgr();
 
-  bool Init();
- private:
-  bool AddItem(std::string &target_path, int &i_fd, int &w_fd);
+  bool TestFunc();
+  bool AddItem(std::string &target_path);
   bool RemoveItem();
 
   static void MaskCheck(const struct inotify_event *event);

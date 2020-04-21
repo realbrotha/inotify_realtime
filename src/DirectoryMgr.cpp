@@ -8,30 +8,62 @@
 
 #include <stdio.h>
 
-DirectoryMgr::DirectoryMgr(InotiMgr inoti_mgr){
-  printf("Directgory Mgrr\n");
-  inoti_mgr_ = &inoti_mgr; // TODO : 싱글톤에 대한 고민.
+std::vector<std::string> DirectoryMgr::sample_list ;
+
+DirectoryMgr::DirectoryMgr() {
 }
-DirectoryMgr::~DirectoryMgr(){
+DirectoryMgr::~DirectoryMgr() {
   Finalize();
 }
 
-bool DirectoryMgr::Init(){
-  //TODO : need thread
-  boost::filesystem::recursive_directory_iterator end;
-  boost::filesystem::path target("/");
-
-  boost::system::error_code ec;
-  int dir_count = 0;
-
-  for (boost::filesystem::recursive_directory_iterator it(target, boost::filesystem::directory_options::skip_permission_denied, ec); it != end; ++it) {
-    if (boost::filesystem::is_directory(*it, ec)) {
-      dir_count++;
-    }
-    // do something
-  }
-  printf("count : dir_count : %d", dir_count);
+bool DirectoryMgr::Init() {
+  TestFunc();
+  search_thread = std::thread(&DirectoryMgr::SearchDirectory, this);
 }
-bool DirectoryMgr::Finalize(){
+bool DirectoryMgr::Finalize() {
+  search_thread.join();
 
+  printf("Directory MGR Finale");
+}
+bool DirectoryMgr::TestFunc() {
+  sample_list.push_back("/proc");
+  sample_list.push_back("/usr/src");
+  sample_list.push_back("/usr/share");
+}
+bool DirectoryMgr::IsSkipPath(std::string &target_path) {
+  // TODO : 이런식으로 찾으면 부하가 클듯.
+  bool result = false;
+
+  for (int i = 0; i < sample_list.size(); ++i) {
+    if (std::string::npos != target_path.find(sample_list[i])) {
+      result = true;
+    }
+  }
+  return result;
+}
+
+int DirectoryMgr::FtwCallback(const char *fpath, const struct stat *sb, int typeflag, struct FTW *ftwbuf) {
+  char real_p[1024] = {0,};
+
+  if (FTW_D != typeflag ||
+      NULL == realpath(fpath, real_p)) {
+    return 0;
+  }
+  std::string target_path(real_p);
+  if (IsSkipPath(target_path))
+    return 0;
+
+  if (!InotiMgr::GetInstance().AddItem(target_path)) {
+    printf("stop!!!"); // inotify event queue full 일듯 ...
+    return -1;
+  }
+  return 0;
+}
+void DirectoryMgr::SearchDirectory() {
+  std::string target_path = "/";
+  if (0 > nftw(target_path.c_str(), FtwCallback, 1, FTW_PHYS)) {
+    printf("error");
+  }
+  printf("SearchDirecoty done.\n");
+  return;
 }

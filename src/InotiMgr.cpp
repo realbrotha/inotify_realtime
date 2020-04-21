@@ -15,11 +15,16 @@
 namespace {
 constexpr int kEPOLL_MAX_EVENT_COUNT = 3;
 }
-InotiMgr::InotiMgr() : inoti_fd(0), watch_fd(0), epoll_fd(0) {
+InotiMgr::InotiMgr() : inoti_fd(-1), watch_fd(-1), epoll_fd(-1) {
 
 }
 InotiMgr::~InotiMgr() {
+  printf ("InotiMgr terminated.\n");
   Finalize();
+}
+InotiMgr& InotiMgr::GetInstance() {
+  static InotiMgr instance_; // TODO : 싱글톤은 원래 이렇게 쓰면 안됨. 나중에 수정할것
+  return instance_;
 }
 
 bool InotiMgr::Init() {
@@ -31,25 +36,30 @@ bool InotiMgr::Init() {
     printf("epoll Create Failed\n");
     return false;
   }
-
-  std::string target_path = "/home/realbro/test";
-  AddItem(target_path,inoti_fd, watch_fd);
-
-  std::thread epoll_tracking(&InotiMgr::EpollHandler, this);
-  epoll_tracking.detach();
-}
-
-bool InotiMgr::AddItem(std::string &target_path, int &i_fd, int &w_fd) {
-  w_fd = inotify_add_watch(i_fd, target_path.c_str(), IN_MODIFY | IN_CREATE | IN_DELETE);
-  if (w_fd < 0) {
-    printf("add fail.\n");
-    return false;
-  }
   if (!EpollWrapper::EpollControll(epoll_fd,
                                    inoti_fd,
                                    EPOLLIN | EPOLLOUT | EPOLLERR | EPOLLET,
                                    EPOLL_CTL_ADD)) {
-    printf("epoll add failed.\n");
+    printf("epoll add failed. epoll_fd : %d\n",epoll_fd);
+    return false;
+  }
+  printf("epoll create epoll_fd : %d\n",epoll_fd);
+  DirectoryMgr directory_mgr;
+  directory_mgr.Init();
+
+  std::thread epoll_tracking(&InotiMgr::EpollHandler, this);
+  epoll_tracking.detach();
+}
+int succ_count = 0;
+bool InotiMgr::AddItem(std::string &target_path) {
+  if (inoti_fd < 0){
+    printf ("need init");
+    return false;
+  }
+  printf ("path : %s\n",target_path.c_str());
+  watch_fd = inotify_add_watch(inoti_fd, target_path.c_str(), IN_MODIFY | IN_CREATE | IN_DELETE);
+  if (watch_fd < 0) {
+    printf("add fail. succ :%d\n",succ_count);
     return false;
   }
   return true;
@@ -78,12 +88,16 @@ void InotiMgr::MaskCheck(const struct inotify_event *event) {
     printf("IN_MODIFY ");
   if (event->mask & IN_MOVE_SELF)
     printf("IN_MOVE_SELF ");
+  if (event->mask ^ IN_MOVE)
+    printf ("move ???");
   if (event->mask & IN_MOVED_FROM)
     printf("IN_MOVED_FROM ");
   if (event->mask & IN_MOVED_TO)
     printf("IN_MOVED_TO ");
   if (event->mask & IN_OPEN)
     printf("IN_OPEN ");
+  if (event->mask & IN_ALL_EVENTS)
+    printf ("printf event all");
   if (event->len > 0)
     printf(": name = %s\n", event->name);
 }
