@@ -9,10 +9,13 @@ set(LIB_PATH ${CMAKE_SOURCE_DIR}/libs)
 set(BIN_PATH ${CMAKE_CURRENT_BINARY_DIR}/output_bin)
 set(SOURCES
         main.cpp
-        InotiMgr.cpp
-        EpollWrapper.cpp
-        FileDescriptorTool.cpp
-        StringTool.cpp DirectoryMgr.cpp DirectoryMgr.h)
+        FdMgr.cpp
+        InotifyEventHandler.cpp
+        ../include/custom/EpollWrapper.cpp
+        ../include/custom/FileDescriptorTool.cpp
+        ../include/custom/StringTool.cpp
+        DirectoryMgr.cpp
+        )
 
 include_directories(${INCLUDE_PATH})
 

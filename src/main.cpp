@@ -5,14 +5,14 @@
 #include <stdio.h>
 #include <unistd.h>
 
-#include "InotiMgr.h"
+#include "InotifyEventHandler.h"
 
 int main(int argc, char *argv[]) {
-  printf("testtest\n");
-
-  InotiMgr::GetInstance().Init();
-  while (1) {
-    printf ("sleep\n");
+  InotifyEventHandler::GetInstance().Init();
+  int count =1000;
+  while (count) {
+    printf ("1111");
     sleep(1);
+    --count;
   }
 }

@@ -8,7 +8,7 @@
 
 #include <stdio.h>
 
-std::vector<std::string> DirectoryMgr::sample_list ;
+std::vector<std::string> DirectoryMgr::sample_list;
 
 DirectoryMgr::DirectoryMgr() {
 }
@@ -29,9 +29,10 @@ bool DirectoryMgr::TestFunc() {
   sample_list.push_back("/proc");
   sample_list.push_back("/usr/src");
   sample_list.push_back("/usr/share");
+  sample_list.push_back("/usr/lib");
 }
 bool DirectoryMgr::IsSkipPath(std::string &target_path) {
-  // TODO : 이런식으로 찾으면 부하가 클듯.
+  // TODO : 이런식으로 찾으면 비용이 클듯.
   bool result = false;
 
   for (int i = 0; i < sample_list.size(); ++i) {
@@ -53,14 +54,14 @@ int DirectoryMgr::FtwCallback(const char *fpath, const struct stat *sb, int type
   if (IsSkipPath(target_path))
     return 0;
 
-  if (!InotiMgr::GetInstance().AddItem(target_path)) {
+  if (!InotifyEventHandler::GetInstance().AddWatch(target_path)) {
     printf("stop!!!"); // inotify event queue full 일듯 ...
     return -1;
   }
   return 0;
 }
 void DirectoryMgr::SearchDirectory() {
-  std::string target_path = "/";
+  std::string target_path = "/home/realbro/test";
   if (0 > nftw(target_path.c_str(), FtwCallback, 1, FTW_PHYS)) {
     printf("error");
   }

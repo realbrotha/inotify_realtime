@@ -5,7 +5,7 @@
 #ifndef TEST_SRC_DIRECTORYMGR_H_
 #define TEST_SRC_DIRECTORYMGR_H_
 
-#include "InotiMgr.h"
+#include "InotifyEventHandler.h"
 
 #include <ftw.h>
 #include <string>
