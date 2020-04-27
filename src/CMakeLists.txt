@@ -24,9 +24,9 @@ add_executable(${MODULE_NAME} ${SOURCES})
 find_package(Threads REQUIRED)
 
 target_link_libraries(${MODULE_NAME}
-        ${CMAKE_THREAD_LIBS_INIT}
-        ${LIB_PATH}/boost/libboost_filesystem.a
-        ${LIB_PATH}/boost/libboost_system.a)
+        ${CMAKE_THREAD_LIBS_INIT})
+#        ${LIB_PATH}/boost/libboost_filesystem.a
+#        ${LIB_PATH}/boost/libboost_system.a)
 
 set_property(TARGET ${MODULE_NAME} PROPERTY OUTPUT_NAME ${MODULE_NAME})
 

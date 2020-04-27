@@ -4,8 +4,6 @@
 
 #include "DirectoryMgr.h"
 
-#include "boost/filesystem.hpp"
-
 #include <stdio.h>
 
 std::vector<std::string> DirectoryMgr::sample_list;

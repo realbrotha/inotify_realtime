@@ -3,7 +3,6 @@
 //
 #include "InotifyEventHandler.h"
 #include "custom/EpollWrapper.h"
-#include "boost/filesystem.hpp"
 
 #include <unistd.h>
 
