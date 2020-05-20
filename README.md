@@ -12,7 +12,8 @@
 - Watch Count .... 우회 하고싶음 .... inotify max event count 를 우회하고싶은데 마땅치가 않음 
 - radix tree 로 매핑 nlogn stable 한 속도
 
-## 결론 Fanotify는 엄청난 혁신, mount 단위로 적용하는것이 유효 
+## 결론 
+- Fanotify는 엄청난 혁신, mount 단위로 적용하는것 신의 한수, 
 
 
 
