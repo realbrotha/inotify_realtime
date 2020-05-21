@@ -12,6 +12,12 @@
 - fd 정보가 없기때문에 파일 blocking 처리는 못할듯
 - 이벤트 구조체 내부에 file name과 length만 날라오는데, full path를 얻기위해 add_watch가 된 list를 따로 유지가 필요하다. (move 이벤트가 오면 갱신이 필요, 들록된 내용은 유지가 되는듯함)
 
+## Event 발생시 inotify_struct 정보
+1. 구조체 내부 int cookies는 move 이벤트 발생시 쌍을 맞추기 위해 발생함 ( MOVE_FROM -> MOVE_TO 이벤트 순차적으로 발생)
+2. 일반적으로 파일이 OverWrite 될 때나 파일이 생성될대 과정은 아래와 같다. 흐름을 통하여 제어하는편이 좋아보임 
+<br>Remove (if file exist) -> Create -> Modify -> Close_write. </br>
+
+
 ## Result
 - 아래의 이미지 처럼 원하는 경로의 이벤트를 처리 가능함.
 - 가능하다면 inotify 보다는 fanotify를 쓰자.
