@@ -5,17 +5,21 @@ project(MODULE_NAME)
 set(CMAKE_CXX_STANDARD 14)
 
 set(INCLUDE_PATH ${CMAKE_SOURCE_DIR}/include)
-set(LIB_PATH ${CMAKE_SOURCE_DIR}/libs)
+set(LIB_PATH ${CMAKE_SOURCE_DIR}/lib)
 set(BIN_PATH ${CMAKE_CURRENT_BINARY_DIR}/output_bin)
+
 set(SOURCES
         main.cpp
-        FdMgr.cpp
         InotifyEventHandler.cpp
-        ../include/custom/EpollWrapper.cpp
-        ../include/custom/FileDescriptorTool.cpp
-        ../include/custom/StringTool.cpp
-        DirectoryMgr.cpp
-        )
+        common/EpollWrapper.cpp
+        common/FileDescriptorTool.cpp
+        common/StringTool.cpp
+        RealtimeInterface.cpp
+        RealtimeInterface.h
+        RealtimeCore.cpp
+        RealtimeCore.h
+        RealtimeConfig.cpp
+        RealtimeConfig.h)
 
 include_directories(${INCLUDE_PATH})
 

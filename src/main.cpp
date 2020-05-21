@@ -5,14 +5,9 @@
 #include <stdio.h>
 #include <unistd.h>
 
-#include "InotifyEventHandler.h"
+#include "RealtimeInterface.h"
 
 int main(int argc, char *argv[]) {
-  InotifyEventHandler::GetInstance().Init();
-  int count =1000;
-  while (count) {
-    printf ("1111");
-    sleep(1);
-    --count;
-  }
+  printf (" hehehehehehe eh oeh oeh eo heo heo he ");
+
 }
