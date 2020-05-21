@@ -1,4 +1,4 @@
-# inotify_test 
+# inotify를 이용한 실시간 파일탐지 
 ## Env
 - ubuntu 16.04.06 LTS
 - clion 2020.01
