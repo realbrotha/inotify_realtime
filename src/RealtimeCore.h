@@ -5,10 +5,12 @@
 #ifndef TEST_REALTIMECORE_H
 #define TEST_REALTIMECORE_H
 
-#include "RealtimeConfig.h"
+#include "RealtimeConfig.hpp"
 #include "InotifyEventHandler.h"
 
 #include <mutex>
+#include <thread>
+
 class RealtimeCore {
  public:
   RealtimeCore(RealtimeConfig& config);
@@ -21,11 +23,14 @@ class RealtimeCore {
 
   //for threads control
   bool StartInotifyThread();
-  bool StopInotifyThread();
+  void StopInotifyThread();
   bool StartDirectorySearchThread();
-  bool StopDirectorySearchThread();
+  void StopDirectorySearchThread();
 
   std::mutex mu_;
+
+  std::thread directory_tread_;
+  std::thread event_handler_;
   RealtimeConfig config_;
   InotifyEventHandler inotify_event_handler_;
 

@@ -6,7 +6,7 @@
 #define TEST_REALTIMEINTERFACE_H
 
 #include "RealtimeCore.h"
-#include "RealtimeConfig.h"
+#include "RealtimeConfig.hpp"
 
 #include <memory>
 

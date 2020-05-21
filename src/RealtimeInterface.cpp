@@ -4,6 +4,7 @@
 
 #include "RealtimeInterface.h"
 #include "boost/scope_exit.hpp"
+
 RealtimeInterface::RealtimeInterface() {
 
 }
@@ -45,6 +46,6 @@ bool RealtimeInterface::Initialize() {
 }
 
 void RealtimeInterface::Finalize() {
-
+  ;
 }
 
