@@ -9,10 +9,9 @@
 #include "common/WaitSignalKill.hpp"
 
 int main(int argc, char *argv[]) {
-  printf (" hehehehehehe eh oeh oeh eo heo heo he\n");
+  printf ("Test Inotify Event\n");
   RealtimeInterface realtime_interface;
   realtime_interface.Initialize();
 
   WaitSignalKill();
-
 }

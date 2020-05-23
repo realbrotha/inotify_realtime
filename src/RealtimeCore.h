@@ -17,20 +17,25 @@ class RealtimeCore {
   ~RealtimeCore();
 
   bool Initialize();
- private:
-  void Finalize();
-  bool InitializeLock();
+  bool Finalize();
 
+ private:
+  bool InitializeLock();
+  bool FinalizeLock();
   //for threads control
-  bool StartInotifyThread();
-  void StopInotifyThread();
+
+  bool StartEpollThread();
+  bool IsInEpollThread() const;
+  void StopEpollThread(bool force_detach = false);
+
   bool StartDirectorySearchThread();
-  void StopDirectorySearchThread();
+  bool IsInDirectorySearchThread() const;
+  void StopDirectorySearchThread(bool force_detach = false);
 
   std::mutex mu_;
 
   std::thread directory_tread_;
-  std::thread event_handler_;
+  std::thread epoll_handler_thread_;
   RealtimeConfig config_;
   InotifyEventHandler inotify_event_handler_;
 

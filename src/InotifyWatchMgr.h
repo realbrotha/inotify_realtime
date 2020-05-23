@@ -14,22 +14,25 @@ class InotifyWatchMgr {
  public :
   static InotifyWatchMgr &GetInstance();
 
-  bool Initialize();
+//InotifyWatchMgr(); to private (for singleton)
+  ~InotifyWatchMgr();
+
+  bool Initialize(int inotify_fd);
+  void Finalize();
 
   bool AddWatch(std::string target_path);
   bool RemoveWatch(const int watch_fd);
 
+  std::string GetPath(int watch_fd);
  private :
   InotifyWatchMgr();
-  ~InotifyWatchMgr();
-
-  void Finalize();
 
   bool AddList(int watch_fd, std::string target_path);
   bool RemoveList(int watch_fd);
 
-  std::mutex mtx_;
   int inotify_fd_;
+
+  std::mutex mtx_;
   std::map<int /* watch_fd */, std::string /* dir path */> fd_path_mapping_list;
 };
 

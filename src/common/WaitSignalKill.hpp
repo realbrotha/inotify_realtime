@@ -25,7 +25,6 @@ bool WaitSignalKill() {
       if ((errno != EINTR) && (errno != EAGAIN)) {
         return -1;
       }
-
       errno = 0;
     }
   }

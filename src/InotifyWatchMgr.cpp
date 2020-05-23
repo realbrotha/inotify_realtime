@@ -16,7 +16,7 @@ InotifyWatchMgr::~InotifyWatchMgr() {
   Finalize();
 }
 
-InotifyWatchMgr& InotifyWatchMgr::GetInstance() {
+InotifyWatchMgr &InotifyWatchMgr::GetInstance() {
   static InotifyWatchMgr instance_;
   return instance_;
 }
@@ -25,15 +25,9 @@ void InotifyWatchMgr::Finalize() {
 
 }
 
-bool InotifyWatchMgr::Initialize() {
-
-  int inoti_fd = inotify_init();
-  if(inoti_fd < 0) {
-    return false;
-  }
-
-  inotify_fd_ = inoti_fd;
-  return !!inoti_fd;
+bool InotifyWatchMgr::Initialize(int inotify_fd) {
+  inotify_fd_ = inotify_fd;
+  return !!inotify_fd_;
 }
 
 bool InotifyWatchMgr::AddWatch(std::string target_path) {
@@ -43,9 +37,9 @@ bool InotifyWatchMgr::AddWatch(std::string target_path) {
                                    kINOTIFY_MASK_FOR_TEST);
 
   if (watch_fd < 0) {
-    printf ("add failed.\n");
+    printf("add failed.\n");
   } else {
-    printf ("path : [%s] success\n",target_path.c_str());
+    printf("wtach_fd [%d] inotify_fd [%d] path : [%s] success\n", watch_fd, inotify_fd_, target_path.c_str());
     AddList(watch_fd, target_path);
     result = true;
   }
@@ -64,4 +58,8 @@ bool InotifyWatchMgr::RemoveList(int watch_fd) {
       fd_path_mapping_list.erase(watch_fd);
     }
   }
+}
+
+std::string InotifyWatchMgr::GetPath(int watch_fd) {
+  return (0 < fd_path_mapping_list.count(watch_fd)) ? fd_path_mapping_list[watch_fd] : "";
 }
