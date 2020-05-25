@@ -20,7 +20,7 @@ set(SOURCES
         RealtimeCore.h
         RealtimeConfig.hpp
         InotifyWatchMgr.cpp
-        InotifyWatchMgr.h common/WaitSignalKill.hpp)
+        InotifyWatchMgr.h common/WaitSignalKill.hpp InotifyMask.cpp InotifyMask.h)
 
 include_directories(${INCLUDE_PATH})
 

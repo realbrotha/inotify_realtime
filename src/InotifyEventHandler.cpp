@@ -3,6 +3,8 @@
 //
 #include "InotifyEventHandler.h"
 #include "InotifyWatchMgr.h"
+#include "InotifyMask.h"
+
 #include "common/EpollWrapper.h"
 #include "common/FileDescriptorTool.h"
 #include "boost/scope_exit.hpp"
@@ -113,24 +115,9 @@ bool InotifyEventHandler::ParseRawEvent(std::deque<struct customized_inotify_eve
   // TODO : 멀티스레드 형태로 될거면 lock 아니면 안걸어도 됨
   struct customized_inotify_event &event = list.front();
 
-  if (event.mask & IN_ISDIR) {
-    printf("*************** dir event ***************\n");
-  } else {
-    printf("*************** file event ***************\n");
-  }
-
+  std::string mask = InotifyMaskToString(event.mask);
+  printf("event mask : %s\n", mask.c_str());
   printf("event from : %d\n", event.wd);
-  if (event.mask & IN_CLOSE) {
-    printf("event : close\n");
-  } else if (event.mask & IN_MODIFY) {
-    printf("event : modify\n");
-  } else if (event.mask & IN_CREATE) {
-    printf("event : create\n");
-  } else if (event.mask & IN_MOVE) {
-    printf("event : move\n");
-  } else {
-    printf("event : event else \n");
-  }
   printf("event cokie : %d\n", event.cookie);
   printf("file size : %d\n", event.len);
   printf("file name : %s\n", event.name.c_str());

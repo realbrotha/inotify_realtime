@@ -7,7 +7,7 @@
 
 #include <sys/inotify.h>
 namespace {
-const int kINOTIFY_MASK_FOR_TEST = IN_MODIFY | IN_CREATE | IN_DELETE | IN_DELETE_SELF | IN_MOVE | IN_CLOSE_WRITE;
+const int kINOTIFY_MASK_FOR_TEST = IN_ACCESS | IN_MODIFY | IN_ATTRIB | IN_CLOSE| IN_OPEN| IN_CREATE | IN_DELETE | IN_DELETE_SELF | IN_MOVE | IN_CLOSE_WRITE | IN_DELETE_SELF | IN_MOVE_SELF;
 }
 InotifyWatchMgr::InotifyWatchMgr() : inotify_fd_(-1) {
 
