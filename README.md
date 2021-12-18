@@ -1,9 +1,7 @@
 # inotify를 이용한 실시간 이벤트 탐지 
 ## Env
 - ubuntu 16.04.06 LTS
-- clion 2020.01
 - gcc 5
-- BOOST 1.66.0 (소스코드, 라이브러리 꾸겨넣었음)
 
 ## Inotify Issue
 - 몹시 불편하게도 inotify는 디렉토리에 대한 리커시브한 기능이 없음.
